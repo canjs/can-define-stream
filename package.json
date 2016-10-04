@@ -37,9 +37,9 @@
   },
   "dependencies": {
     "can-compute": "3.0.0-pre.11",
+    "can-compute-stream": "file:///Users/obaidahmed/Development/bitovi/can-compute-stream",
     "can-define": "^0.8.2",
-    "can-util": "^3.0.0-pre.34",
-    "can-compute-stream": "*"
+    "can-util": "^3.0.0-pre.34"
   },
   "devDependencies": {
     "bit-docs": "0.0.6",

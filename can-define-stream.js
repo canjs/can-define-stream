@@ -14,7 +14,7 @@ define.extensions = function (objPrototype, prop, definition) {
 				var map = this;
 				var computes = definition.stream
 					.map(function (arg) {
-						return typeof arg === 'string' ? compute(map, arg) : arg;
+						return typeof arg === 'string' ? compute(map, arg.split(" ")[0], arg.split(" ")[1]) : arg;
 					});
 				return computeStream.asCompute.apply(this, computes);
 			}

@@ -7,6 +7,7 @@ require('can-define-stream');
 
 QUnit.module('can-define-stream');
 
+
 test('Stream map values into others', function () {
 
 	var allFooValue;
@@ -25,7 +26,7 @@ test('Stream map values into others', function () {
 	MyMap.List = DefineList.extend({
 		"*": MyMap
 	});
-	
+
 	var list = new MyMap.List([]);
 	list.on('add', function(){
 		console.log(this instanceof DefineList);
@@ -35,7 +36,7 @@ test('Stream map values into others', function () {
 	var map = new MyMap();
 	list.push(map);
 	console.log(list);
-	
+
 	map.on('allFoo', function (ev, newVal) {
 		allFooValue = newVal;
 	});
@@ -108,4 +109,31 @@ test('Stream into streams', function () {
 
 	expected = 3;
 	map.stream2 = expected;
+});
+
+
+test('Stream map values into others using sugar syntax with events', function () {
+	var expected;
+	var MyMap = DefineMap.extend({
+		foo1: 'number',
+		foo2: 'number',
+		allFoo: {
+			stream: ['foo1 change', 'foo2']
+		}
+	});
+
+	var map = new MyMap();
+
+	map.on('allFoo', function (ev, newVal) {
+		expected = newVal;
+	});
+
+	map.foo1 = 1;
+	QUnit.equal(expected, 1);
+
+	map.foo2 = 2;
+	QUnit.equal(expected, 2);
+
+	map.foo1 = 3;
+	QUnit.equal(expected, 3);
 });
