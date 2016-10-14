@@ -36,10 +36,12 @@
     "npmAlgorithm": "flat"
   },
   "dependencies": {
-    "can-compute": "3.0.0-pre.11",
-    "can-compute-stream": "file:///Users/obaidahmed/Development/bitovi/can-compute-stream",
+    "can-compute": "3.0.0-pre.16",
+    "can-stream": "file:///Users/obaidahmed/Development/bitovi/can-stream",
     "can-define": "^0.8.2",
-    "can-util": "^3.0.0-pre.34"
+    "can-observation": "^3.0.0-pre.13",
+    "can-util": "^3.0.0-pre.34",
+    "kefir": "^3.5.1"
   },
   "devDependencies": {
     "bit-docs": "0.0.6",
