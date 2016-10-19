@@ -1,0 +1,79 @@
+{
+  "name": "can-define-stream",
+  "version": "0.0.1",
+  "description": "",
+  "homepage": "http://canjs.com",
+  "author": {
+    "name": "Bitovi",
+    "email": "contact@bitovi.com",
+    "url": "http://bitovi.com"
+  },
+  "scripts": {
+    "preversion": "npm test && npm run build",
+    "version": "git commit -am \"Update dist for release\" && git checkout -b release && git add -f dist/",
+    "postversion": "git push --tags && git checkout master && git branch -D release && git push",
+    "testee": "testee test.html --browsers firefox",
+    "test": "npm run jshint && npm run testee",
+    "jshint": "jshint *.js --config",
+    "release:patch": "npm version patch && npm publish",
+    "release:minor": "npm version minor && npm publish",
+    "release:major": "npm version major && npm publish",
+    "build": "node build.js",
+    "document": "bit-docs",
+    "develop": "done-serve --static --develop --port 8080",
+    "release:pre": "npm version prerelease && npm publish"
+  },
+  "main": "can-define-stream",
+  "keywords": [
+    "canjs",
+    "canjs-plugin",
+    "donejs"
+  ],
+  "system": {
+    "configDependencies": [
+      "live-reload"
+    ],
+    "npmAlgorithm": "flat"
+  },
+  "dependencies": {
+    "can-compute": "3.0.0-pre.16",
+    "can-stream": "file:///Users/obaidahmed/Development/bitovi/can-stream",
+    "can-define": "^0.8.2",
+    "can-observation": "^3.0.0-pre.13",
+    "can-util": "^3.0.0-pre.34",
+    "kefir": "^3.5.1"
+  },
+  "devDependencies": {
+    "bit-docs": "0.0.6",
+    "done-serve": "^0.2.4",
+    "donejs-cli": "^0.9.5",
+    "generator-donejs": "^0.9.0",
+    "jshint": "^2.9.1",
+    "steal": "^0.16.35",
+    "steal-qunit": "^0.1.1",
+    "steal-tools": "^0.16.0",
+    "testee": "^0.2.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/canjs/can-define-stream.git"
+  },
+  "bit-docs": {
+    "dependencies": {
+      "bit-docs-glob-finder": "^0.0.5",
+      "bit-docs-dev": "^0.0.3",
+      "bit-docs-js": "^0.0.3",
+      "bit-docs-generate-readme": "^0.0.8"
+    },
+    "glob": {
+      "pattern": "**/*.{js,md}",
+      "ignore": "node_modules/**/*"
+    },
+    "readme": {
+      "apis": [
+        "can-define-stream"
+      ]
+    },
+    "parent": "can-define-stream"
+  }
+}
