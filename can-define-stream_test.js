@@ -52,7 +52,7 @@ test('Stream behavior on multiple properties with merge', function() {
 	map.baz = 'new baz';
 });
 
-test('Check if bindings are properly handled on streams', function() {
+test('Test if streams are memory safe', function() {
 
 	var MyMap = DefineMap.extend({
 		foo: 'string',
@@ -71,6 +71,7 @@ test('Check if bindings are properly handled on streams', function() {
 
 	QUnit.equal(0, map._bindings, 'Should have no bindings');
 
+
 	map.on("baz", function(ev, newVal, oldVal){});
 
 	QUnit.equal(3, map._bindings, 'Should have 3 bindings');
@@ -78,5 +79,4 @@ test('Check if bindings are properly handled on streams', function() {
 	map.off('baz');
 
 	QUnit.equal(0, map._bindings, 'Should reset the bindings');
-
 });
