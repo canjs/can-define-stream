@@ -1,7 +1,5 @@
 var define = require('can-define');
-var compute = require('can-compute');
 var canStream = require('can-stream');
-var isArray = require("can-util/js/is-array/is-array");
 var assign = require("can-util/js/assign/assign");
 var DefineMap = require('can-define/map/map');
 
@@ -13,12 +11,9 @@ define.extensions = function (objPrototype, prop, definition) {
 	if (definition.stream) {
 		return assign({
 			value: function() {
-				debugger;
-				var internalStream = definition.stream.call(objPrototype, canStream.toStream(objPrototype, prop));
-				//internalStream.onValue()
-				return internalStream;
+				return definition.stream.call(this, this.stream(prop));
 			}
-		}, define.types.stream);
+		}, definition.type);
 
 	} else {
 		return oldExtensions.apply(this, arguments);
