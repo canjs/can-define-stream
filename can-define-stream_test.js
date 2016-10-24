@@ -4,40 +4,11 @@ require('can-define-stream');
 
 QUnit.module('can-define-stream');
 
-test('Stream behaviour on single property', function() {
-
-	var expected = '';
-
-	var MyMap = DefineMap.extend({
-		foo: 'string',
-		bar: { type: 'string', value: 'bar' },
-		baz: {
-			type: 'string',
-		    stream( stream ) {
-				return stream;
-		    },
-		    get(lastSetValue) {
-		      return `**${lastSetValue}**`;
-		    }
-		}
-	});
-
-	var map = new MyMap();
-
-	map.baz.onValue(function(evnt){
-		QUnit.equal(evnt.target[evnt.type], expected, evnt.type + " updated");
-	});
-
-	expected = '1';
-	map.baz = '1';
-	expected = '2';
-	map.baz = '2';
-
-});
-
 test('Stream behavior on multiple properties with merge', function() {
 
-	var expected = '';
+	var expectedNewVal,
+		expectedOldVal,
+		caseName;
 
 	var MyMap = DefineMap.extend({
 		foo: 'string',
@@ -45,12 +16,9 @@ test('Stream behavior on multiple properties with merge', function() {
 		baz: {
 			type: 'string',
 		    stream( stream ) {
-				var fooStream = this.stream('foo');
-				var barStream = this.stream('bar');
+				var fooStream = this.stream('.foo');
+				var barStream = this.stream('.bar');
 				return stream.merge(fooStream).merge(barStream);
-		    },
-		    get(lastSetValue) {
-		      return `**${lastSetValue}**`;
 		    }
 		}
 	});
@@ -59,13 +27,27 @@ test('Stream behavior on multiple properties with merge', function() {
 
 	map.foo = 'foo-1';
 
-	map.baz.onValue(function(evnt){
-		QUnit.equal(evnt.target[evnt.type], expected, evnt.type + " updated");
+	QUnit.equal( map.baz, undefined, "read value before binding");
+
+	map.on("baz", function(ev, newVal, oldVal){
+		QUnit.equal(newVal, expectedNewVal, caseName+ " newVal");
+		QUnit.equal(oldVal, expectedOldVal, caseName+ " oldVal");
 	});
 
-	expected = 'foo-2';
+	QUnit.equal( map.baz, 'bar', "read value immediately after binding");
+
+	caseName = "setting foo";
+	expectedOldVal = 'bar';
+	expectedNewVal = 'foo-2';
 	map.foo = 'foo-2';
-	expected = 'new bar';
+
+	caseName = "setting bar";
+	expectedOldVal = expectedNewVal;
+	expectedNewVal = 'new bar';
 	map.bar = 'new bar';
 
+	caseName = "setting baz setter";
+	expectedOldVal = expectedNewVal;
+	expectedNewVal = 'new baz';
+	map.baz = 'new baz';
 });
