@@ -51,3 +51,36 @@ test('Stream behavior on multiple properties with merge', function() {
 	expectedNewVal = 'new baz';
 	map.baz = 'new baz';
 });
+
+test('Check if bindings are properly handled on streams', function() {
+
+	var expectedNewVal,
+		expectedOldVal,
+		caseName;
+
+	var MyMap = DefineMap.extend({
+		foo: 'string',
+		bar: { type: 'string', value: 'bar' },
+		baz: {
+			type: 'string',
+		    stream( stream ) {
+				var fooStream = this.stream('.foo');
+				var barStream = this.stream('.bar');
+				return stream.merge(fooStream).merge(barStream);
+		    }
+		}
+	});
+
+	var map = new MyMap();
+
+	QUnit.equal(0, map._bindings, 'Should have no bindings before calling "on"');
+
+	map.on("baz", function(ev, newVal, oldVal){});
+
+	QUnit.equal(3, map._bindings, 'Should have 3 bindings after calling "on"');
+
+	map.off('baz');
+
+	QUnit.equal(0, map._bindings, 'Should reset the bindings');
+
+});
