@@ -36,11 +36,11 @@
     "npmAlgorithm": "flat"
   },
   "dependencies": {
-    "can-compute": "3.0.0-pre.16",
-    "can-define": "^0.8.2",
-    "can-observation": "^3.0.0-pre.13",
-    "can-stream": "^0.0.3",
-    "can-util": "^3.0.0-pre.34",
+    "can-compute": "^3.0.0",
+    "can-define": "^1.0.0",
+    "can-observation": "^3.0.0",
+    "can-stream": "^0.0.4",
+    "can-util": "^3.0.0",
     "kefir": "^3.5.1"
   },
   "devDependencies": {
