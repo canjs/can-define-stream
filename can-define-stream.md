@@ -12,7 +12,7 @@ to provide the stream functionality.
   The `can-define-stream` module doesn't export anything.  Instead it changes
   [can-define] to support the [can-define-stream.stream] behavior and
   [can-define/map/map] and [can-define/list/list] to have a `stream` method that's
-  a shorthand for [can-stream.toStream].
+  a shorthand for [can-stream.toStream] with 'this' (the map or list instance) passed as the first argument.
 
   ```js
   require("can-define-stream");
