@@ -3,6 +3,7 @@
 @group can-define-stream/behaviors 0 behaviors
 @group can-define-stream/DefineMap.prototype 1 DefineMap.prototype
 @group can-define-stream/DefineList.prototype 2 DefineList.prototype
+@package ./package.json
 
 Define property values using streams.  [can-stream](https://github.com/canjs/can-stream) is used internally
 to provide the stream functionality.
