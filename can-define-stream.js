@@ -73,7 +73,7 @@ var makeComputeFromStream = function(map, makeStream){
  * [can-define.types.propDefinition] of all [can-define] types.
  *
  * It is useful for deriving values that [can-define.types.get] can not, for example
- * deriving values based around the change in another value intead of the values themselves.
+ * deriving values based around the change in another value instead of the values themselves.
  *
  * ```js
  * var Person = DefineMap.extend({
