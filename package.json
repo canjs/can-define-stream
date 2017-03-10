@@ -33,7 +33,7 @@
     ]
   },
   "dependencies": {
-    "can-compute": "^3.0.0",
+    "can-compute": "3.0.6",
     "can-define": "^1.0.0",
     "can-observation": "^3.0.0",
     "can-stream": "^0.0.5",
