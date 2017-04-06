@@ -1,16 +1,9 @@
 var define = require('can-define');
-// var canStream = require('can-stream');
 var assign = require("can-util/js/assign/assign");
 var DefineMap = require('can-define/map/map');
 var DefineList = require('can-define/list/list');
 var compute = require("can-compute");
 
-
-
-// DefineList.prototype.stream = DefineMap.prototype.stream = function() {
-// 	[].unshift.call(arguments, this);
-// 	return canStream.toStream.apply(this, arguments);
-// };
 var oldExtensions = define.extensions;
 define.behaviors.push('stream');
 

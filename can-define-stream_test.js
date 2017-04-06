@@ -2,7 +2,6 @@ var QUnit = require('steal-qunit');
 var DefineMap = require('can-define/map/map');
 var DefineList = require('can-define/list/list');
 var defineStream = require('can-define-stream');
-var canStream = require('can-stream');
 var streamKefir = require('can-stream-kefir');
 
 QUnit.module('can-define-stream');
@@ -18,11 +17,11 @@ test('Stream behavior on multiple properties with merge', function() {
 		bar: { type: 'string', value: 'bar' },
 		baz: {
 			type: 'string',
-		    stream( stream ) {
-					var fooStream = this.stream('.foo');
-					var barStream = this.stream('.bar');
-					return stream.merge(fooStream).merge(barStream);
-		    }
+	    stream( stream ) {
+				var fooStream = this.stream('.foo');
+				var barStream = this.stream('.bar');
+				return stream.merge(fooStream).merge(barStream);
+	    }
 		}
 	});
 	defineStream(streamKefir)(MyMap);
@@ -71,6 +70,7 @@ test('Test if streams are memory safe', function() {
 		}
 	});
 	defineStream(streamKefir)(MyMap);
+	
 	var map = new MyMap();
 
 	QUnit.equal(0, map._bindings, 'Should have no bindings');
@@ -156,7 +156,7 @@ test('Stream on DefineList', function() {
 
 	var PeopleList = DefineList.extend({});
 	defineStream(streamKefir)(PeopleList);
-	
+
 	var people = new PeopleList([
 	  { first: "Justin", last: "Meyer" },
 	  { first: "Paula", last: "Strozak" }
