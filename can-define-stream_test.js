@@ -154,12 +154,15 @@ test('Update map property based on stream value', function() {
 test('Stream on DefineList', function() {
 	var expectedLength;
 
-	var people = new DefineList([
+	var PeopleList = DefineList.extend({});
+	defineStream(streamKefir)(PeopleList);
+	
+	var people = new PeopleList([
 	  { first: "Justin", last: "Meyer" },
 	  { first: "Paula", last: "Strozak" }
 	]);
 
-	defineStream(streamKefir)(people);
+
 
 	var stream = people.stream('length');
 
