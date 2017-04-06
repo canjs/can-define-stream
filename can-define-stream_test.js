@@ -1,7 +1,9 @@
 var QUnit = require('steal-qunit');
 var DefineMap = require('can-define/map/map');
 var DefineList = require('can-define/list/list');
-require('can-define-stream');
+var defineStream = require('can-define-stream');
+var canStream = require('can-stream');
+var streamKefir = require('can-stream-kefir');
 
 QUnit.module('can-define-stream');
 
@@ -11,18 +13,19 @@ test('Stream behavior on multiple properties with merge', function() {
 		expectedOldVal,
 		caseName;
 
-	var MyMap = DefineMap.extend({
+	var MyMap = DefineMap.extend('MyMap', {
 		foo: 'string',
 		bar: { type: 'string', value: 'bar' },
 		baz: {
 			type: 'string',
 		    stream( stream ) {
-				var fooStream = this.stream('.foo');
-				var barStream = this.stream('.bar');
-				return stream.merge(fooStream).merge(barStream);
+					var fooStream = this.stream('.foo');
+					var barStream = this.stream('.bar');
+					return stream.merge(fooStream).merge(barStream);
 		    }
 		}
 	});
+	defineStream(streamKefir)(MyMap);
 
 	var map = new MyMap();
 
@@ -67,7 +70,7 @@ test('Test if streams are memory safe', function() {
 		    }
 		}
 	});
-
+	defineStream(streamKefir)(MyMap);
 	var map = new MyMap();
 
 	QUnit.equal(0, map._bindings, 'Should have no bindings');
@@ -100,7 +103,7 @@ test('Keep track of change counts on stream', function(){
           }
       }
     });
-
+		defineStream(streamKefir)(Person);
     var me = new Person({first: 'Justin', last: 'Meyer'});
 
 	//this increases the count.. should it?
@@ -129,7 +132,7 @@ test('Update map property based on stream value', function() {
 	    	}
 	  	}
 	});
-
+	defineStream(streamKefir)(Person);
 	var me = new Person({name: "James"});
 
 	me.on("lastValidName", function(lastValid){
@@ -155,6 +158,8 @@ test('Stream on DefineList', function() {
 	  { first: "Justin", last: "Meyer" },
 	  { first: "Paula", last: "Strozak" }
 	]);
+
+	defineStream(streamKefir)(people);
 
 	var stream = people.stream('length');
 
