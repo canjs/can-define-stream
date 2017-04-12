@@ -21,10 +21,11 @@ define.extensions = function (objPrototype, prop, definition) {
 module.exports = function(canStream) {
 	return function(DefineMapType) {
 
-		DefineMapType.prototype.toStream = canStream.toStream;
-		DefineMapType.prototype.toCompute = canStream.toCompute;
-		DefineMapType.prototype.toStreamFromProperty = canStream.toStreamFromProperty;
-		DefineMapType.prototype.toStreamFromEvent = canStream.toStreamFromEvent;
+
+		for(var prop in canStream) {
+			DefineMapType.prototype[prop] = canStream[prop];
+		}
+
 
 		DefineMapType.prototype.stream = function() {
 			[].unshift.call(arguments, this);
