@@ -171,3 +171,28 @@ test('Stream on DefineList', function() {
 	expectedLength = 2;
 	people.pop();
 });
+
+
+test('Can instantiate define-map instances with properties that have stream definitions.', function() {
+	var Locator = DefineMap.extend({
+		state: "string",
+		city: {
+		   type: "string",
+		   stream: function(setStream) {
+		       return this.stream(".state").map(function(){
+		           return null;
+		       }).merge(setStream);
+		   }
+		}
+	});
+
+	var locator = new Locator({
+	    state: 'IL',
+	    city: 'Chitown'
+	});
+
+	QUnit.equal(locator.state, 'IL', 'State in tact, no errors');
+	QUnit.equal(typeof locator.city, 'undefined', 'Derived value ignored.');
+	locator.state = 'FL';
+	QUnit.equal(locator.city, null, 'Derived value set.');
+});
