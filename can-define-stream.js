@@ -23,7 +23,9 @@ var makeComputeWithSetter = function (valueStream, willHaveEmitter) {
 			return lastValue;
 		},
 		set: function (val) {
-			willHaveEmitter.emitter.emit(val);
+      if (willHaveEmitter.emitter) {
+        willHaveEmitter.emitter.emit(val);  
+      }
 			return val;
 		},
 
