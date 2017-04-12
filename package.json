@@ -37,7 +37,6 @@
     "can-define": "^1.0.0",
     "can-observation": "^3.0.0",
     "can-stream": "^0.0.5",
-    "can-stream-kefir": "git://github.com/canjs/can-stream-kefir.git#mixin",
     "can-util": "^3.0.0",
     "kefir": "^3.5.1"
   },

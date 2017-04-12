@@ -8,7 +8,7 @@ define.extensions = function (objPrototype, prop, definition) {
 	if (definition.stream) {
 		return assign({
 			value: function() {
-				return this.canStream.toCompute(definition.stream, this);
+				return this.toCompute(definition.stream, this);
 			}
 		}, define.types.compute);
 
@@ -20,11 +20,17 @@ define.extensions = function (objPrototype, prop, definition) {
 
 module.exports = function(canStream) {
 	return function(DefineMapType) {
-		DefineMapType.prototype.canStream = canStream;
+
+		DefineMapType.prototype.toStream = canStream.toStream;
+		DefineMapType.prototype.toCompute = canStream.toCompute;
+		DefineMapType.prototype.toStreamFromProperty = canStream.toStreamFromProperty;
+		DefineMapType.prototype.toStreamFromEvent = canStream.toStreamFromEvent;
+
 		DefineMapType.prototype.stream = function() {
 			[].unshift.call(arguments, this);
-			return canStream.toStream.apply(this, arguments);
+			return this.toStream.apply(this, arguments);
 		};
-		return;
+
+
 	};
 };
