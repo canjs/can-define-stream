@@ -36,7 +36,7 @@ canDefineStream(canStream)(Person);
 var me = new Person({name: "Justin", last: "Meyer"});
 
 me.on("fullNameChangeCount", function(ev, newVal) {
-    console.lov(newVal);
+    console.log(newVal);
 });
 
 
