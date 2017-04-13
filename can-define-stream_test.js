@@ -18,7 +18,7 @@ test('Stream behavior on multiple properties with merge', function() {
 		bar: { type: 'string', value: 'bar' },
 		baz: {
 			type: 'string',
-	    stream( stream ) {
+			stream: function( stream ) {
 				var fooStream = this.stream('.foo');
 				var barStream = this.stream('.bar');
 
@@ -33,7 +33,7 @@ test('Stream behavior on multiple properties with merge', function() {
 				c2.on('change', changeHandler);
 
 				return this.toStream(mergedCompute);
-	    }
+			}
 		}
 	});
 
@@ -153,7 +153,7 @@ test('Test if streams are memory safe', function() {
 		bar: { type: 'string', value: 'bar' },
 		baz: {
 			type: 'string',
-		  stream: function( stream ) {
+			stream: function( stream ) {
 				var fooStream = this.stream('.foo');
 				var barStream = this.stream('.bar');
 
@@ -168,7 +168,7 @@ test('Test if streams are memory safe', function() {
 				c2.on('change', changeHandler);
 
 				return this.toStream(mergedCompute);
-		   }
+			}
 		}
 	});
 
