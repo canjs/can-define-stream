@@ -24,9 +24,9 @@ var Person = DefineMap.extend({
     },
     fullNameChangeCount: {
         stream: function() {
-        return this.stream(".fullName").scan(function(last) {
-            return last + 1;
-        }, 0);
+            return this.stream(".fullName").scan(function(last) {
+                return last + 1;
+            }, 0);
         }
     }
 });

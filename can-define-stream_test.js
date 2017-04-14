@@ -260,17 +260,17 @@ test('Test if streams are memory safe', function() {
 
 	var map = new MyMap();
 
-	QUnit.equal(0, map._bindings, 'Should have no bindings');
+	QUnit.equal(map.__bindEvents._lifecycleBindings, undefined, 'Should have no bindings');
 
 
 	map.on("baz", function(ev, newVal, oldVal){});
 
-	QUnit.equal(3, map._bindings, 'Should have 3 bindings');
+	QUnit.equal(map.__bindEvents._lifecycleBindings, 3, 'Should have 3 bindings');
 
 
 	map.off('baz');
 
-	QUnit.equal(2, map._bindings, 'Should reset the bindings');
+	QUnit.equal(map.__bindEvents._lifecycleBindings, 2, 'Should reset the bindings');
 });
 
 
