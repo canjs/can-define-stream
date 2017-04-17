@@ -1,6 +1,6 @@
 @module {Object} can-define-stream can-define-stream
-@parent can-stream
-@group can-define-stream.fns 4 Methods
+@parent can-ecosystem
+@group can-define-stream.fns 0 Methods
 @package ../package.json
 
 @description Exports a function that takes a [can-stream] can-stream interface and returns a function that takes a Type and uses the supplied can-stream interface to create streamed property definitions and a .toStream method
