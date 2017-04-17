@@ -3,8 +3,10 @@ var DefineMap = require('can-define/map/map');
 var DefineList = require('can-define/list/list');
 var defineStream = require('can-define-stream');
 var compute = require('can-compute');
+var canStream = require('can-stream');
 
 QUnit.module('can-define-stream');
+
 
 test('Stream behavior on multiple properties with merge', function() {
 
@@ -38,30 +40,16 @@ test('Stream behavior on multiple properties with merge', function() {
 	});
 
 	var canStreamInterface = {
-		toStream: function(observable, propOrEvent) {
-			var lastVal = (typeof observable === 'function') ? observable() :   observable[propOrEvent.replace(".", "")];
-			var obj;
-			return obj = {
-				onValue: function(callback) {
-					observable.on('change', function(val) {
-						callback(val);
-					});
-					callback(lastVal);
-				}
-			};
-		},
-		toStreamFromProperty: function(observable, property) {
+		toStream: function(c) {
 			return {
 				onValue: function(callback) {
-					var ret = { target: {} };
-					ret.target[property] = observable[property];
-					observable.on(property, function(ev, value) {
-						callback(value);
+					c.on('change', function() {
+						callback.apply(null, Array.from(arguments));
 					});
+					callback(null, c());
 				}
 			};
 		},
-		toStreamFromEvent: function(observable, event) {},
 		toCompute: function(makeStream, context) {
 			var emitter,
 				lastValue,
@@ -83,7 +71,6 @@ test('Stream behavior on multiple properties with merge', function() {
 			}
 			var valueStream = makeStream.call(context, setterStream);
 
-
 			// Create a compute that will bind to the resolved stream when bound
 			return compute(undefined, {
 
@@ -92,18 +79,14 @@ test('Stream behavior on multiple properties with merge', function() {
 					return lastValue;
 				},
 				set: function (val) {
-					if(emitter) {
-						emitter.emit(val);
-					} else {
-						lastSetValue = val;
-					}
+					lastSetValue = val;
 					return val;
 				},
 
 				on: function (updated) {
-					streamHandler = function (val) {
-						lastValue = val;
-						updated();
+					streamHandler = function (ev, newVal, oldVal) {
+						lastValue = newVal;
+						updated(lastValue);
 					};
 					valueStream.onValue(streamHandler);
 				},
@@ -114,7 +97,9 @@ test('Stream behavior on multiple properties with merge', function() {
 			});
 		}
 	};
-	defineStream(canStreamInterface)(MyMap);
+
+	var canStreaming = canStream(canStreamInterface);
+	defineStream(canStreaming)(MyMap);
 
 	var map = new MyMap();
 
@@ -173,37 +158,18 @@ test('Test if streams are memory safe', function() {
 	});
 
 	var canStreamInterface = {
-		toStream: function(observable, propOrEvent) {
-			propOrEvent = propOrEvent ? propOrEvent.replace('.', '') : propOrEvent;
-			var lastVal = (typeof observable === 'function') ? observable() :   observable[propOrEvent];
-			var obj;
-			return obj = {
-				onValue: function(callback) {
-					observable.on(propOrEvent, function(val) {
-						callback(val);
-					});
-					callback(lastVal);
-				},
-				offValue: function() {
-					observable.off(propOrEvent);
-				}
-			};
-		},
-		toStreamFromProperty: function(observable, property) {
+		toStream: function(c) {
 			return {
 				onValue: function(callback) {
-					var ret = { target: {} };
-					ret.target[property] = observable[property];
-					observable.on(property, function(ev, value) {
-						callback(value);
+					c.on('change', function() {
+						callback.apply(null, Array.from(arguments));
 					});
 				},
 				offValue: function() {
-					observable.off(property);
+					c.off();
 				}
 			};
 		},
-		toStreamFromEvent: function(observable, event) {},
 		toCompute: function(makeStream, context) {
 			var emitter,
 				lastValue,
@@ -256,7 +222,8 @@ test('Test if streams are memory safe', function() {
 			});
 		}
 	};
-	defineStream(canStreamInterface)(MyMap);
+	var canStreaming = canStream(canStreamInterface);
+	defineStream(canStreaming)(MyMap);
 
 	var map = new MyMap();
 
@@ -279,50 +246,29 @@ test('Update map property based on stream value', function() {
 	var expected;
 	var Person = DefineMap.extend({
 		name: "string",
-	  	lastValidName: {
+		lastValidName: {
 	    	stream: function(){
-				var nameStream = this.stream(".name");
+				var nameStream = this.stream(".name").filter(function(name) {
+					return name.indexOf(" ") >= 0;
+				});
 				return nameStream;
 	    	}
-	  	}
+		}
 	});
 	var canStreamInterface = {
-		toStream: function(observable, propOrEvent) {
-			propOrEvent = propOrEvent ? propOrEvent.replace('.', '') : propOrEvent;
-			var lastVal = (typeof observable === 'function') ? observable() :   observable[propOrEvent];
-			var obj;
-			return obj = {
-				onValue: function(callback) {
-					observable.on(propOrEvent, function(ev, val, oldVal) {
-						if(val.indexOf(" ") >= 0) {
-							callback(val);
-						}
-					});
-
-					if(lastVal.indexOf(" ") >= 0) {
-						callback(lastVal);
-					}
-				},
-				offValue: function() {
-					observable.off(propOrEvent);
-				}
-			};
-		},
-		toStreamFromProperty: function(observable, property) {
+		toStream: function(c) {
 			return {
+				val: c(),
 				onValue: function(callback) {
-					var ret = { target: {} };
-					ret.target[property] = observable[property];
-					observable.on(property, function(ev, value) {
-						callback(value);
+					var that = this;
+					c.on('change', function(ev, val) {
+						callback.apply(null, Array.from(arguments));
+						that.lastVal = val;
 					});
-				},
-				offValue: function() {
-					observable.off(property);
+					callback(undefined, c());
 				}
 			};
 		},
-		toStreamFromEvent: function(observable, event) {},
 		toCompute: function(makeStream, context) {
 			var emitter,
 				lastValue,
@@ -353,11 +299,7 @@ test('Update map property based on stream value', function() {
 					return lastValue;
 				},
 				set: function (val) {
-					if(emitter) {
-						emitter.emit(val);
-					} else {
-						lastSetValue = val;
-					}
+					lastSetValue = val;
 					return val;
 				},
 
@@ -375,11 +317,13 @@ test('Update map property based on stream value', function() {
 			});
 		}
 	};
-	defineStream(canStreamInterface)(Person);
+	var canStreaming = canStream(canStreamInterface);
+	defineStream(canStreaming)(Person);
 	var me = new Person({name: "James"});
 
 	expected = me.name;
 	me.on("lastValidName", function(lastValid){
+		debugger;
 		QUnit.equal(lastValid.target.name, expected, "Updated name to " + expected);
 	});
 
@@ -401,26 +345,19 @@ test('Stream on DefineList', function() {
 	var PeopleList = DefineList.extend({});
 
 	var canStreamInterface = {
-		toStream: function(observable, propOrEvent) {
-
-			var lastVal = (typeof observable === 'function') ? observable() :   observable[propOrEvent.replace(".", "")];
-			var obj;
-			return obj = {
+		toStream: function(c) {
+			return {
 				onValue: function(callback) {
-					var event = propOrEvent ? propOrEvent : 'change';
-					observable.on(event, function(ev, val) {
-						callback(val);
+					c.on('change', function() {
+						callback.apply(null, Array.from(arguments));
 					});
-
-					callback(lastVal);
 				}
 			};
 		},
-		toStreamFromProperty: function(observable, property) {},
-		toStreamFromEvent: function(observable, event) {},
 		toCompute: function(makeStream, context) {}
 	};
-	defineStream(canStreamInterface)(PeopleList);
+	var canStreaming = canStream(canStreamInterface);
+	defineStream(canStreaming)(PeopleList);
 
 	var people = new PeopleList([
 	  { first: "Justin", last: "Meyer" },
@@ -430,7 +367,7 @@ test('Stream on DefineList', function() {
 	var stream = people.stream('length');
 
 	expectedLength = 2;
-	stream.onValue(function(val) {
+	stream.onValue(function(ev, val) {
 		QUnit.equal(val, expectedLength, 'List size changed');
 	});
 
