@@ -323,7 +323,6 @@ test('Update map property based on stream value', function() {
 
 	expected = me.name;
 	me.on("lastValidName", function(lastValid){
-		debugger;
 		QUnit.equal(lastValid.target.name, expected, "Updated name to " + expected);
 	});
 
