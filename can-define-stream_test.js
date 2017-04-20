@@ -97,7 +97,7 @@ test('Stream behavior on multiple properties with merge', 8, function() {
 				this.stream('.bar').onValue(mergeValue);
 				setStream.onValue(mergeValue);
 
-				return this.toStream(mergedCompute);
+				return canStreaming.toStream(mergedCompute);
 			}
 		}
 	});
@@ -170,7 +170,7 @@ test('Test if streams are memory safe', function() {
 					}
 				});
 
-				return this.toStream(mergedCompute);
+				return canStreaming.toStream(mergedCompute);
 			}
 		}
 	});
@@ -220,7 +220,7 @@ test('Stream on DefineList', function() {
 	  { first: "Paula", last: "Strozak" }
 	]);
 
-	var stream = people.stream('length');
+	var stream = people.stream('.length');
 
 	expectedLength = 2;
 	stream.onValue(function(ev, val) {
