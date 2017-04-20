@@ -8,7 +8,75 @@ var canStream = require('can-stream');
 QUnit.module('can-define-stream');
 
 
-test('Stream behavior on multiple properties with merge', function() {
+// Create a placeholder streaming interface:
+var id = 0;
+var canStreamInterface = {
+	toStream: function(c) {
+		return {
+			id: ++id,
+			onValue: function(callback) {
+				callback["_computeHandler"+this.id] = function(ev, newVal) {
+					callback(newVal);
+				};
+
+				c.on('change', callback["_computeHandler"+this.id]);
+				callback( c());
+			},
+			offValue: function(callback){
+				c.off('change',callback["_computeHandler"+this.id]);
+			}
+		};
+	},
+	toCompute: function(makeStream, context) {
+		var lastValue,
+			streamHandler;
+
+		var setCallbacks = [];
+		var setterStream = {
+			onValue: function(callback){
+				setCallbacks.push(callback);
+			},
+			offValue: function(callback) {
+				var index = setCallbacks.indexOf(callback);
+				setCallbacks.splice(index, 1);
+			}
+		};
+
+		var valueStream = makeStream.call(context, setterStream);
+
+		// Create a compute that will bind to the resolved stream when bound
+		return compute(undefined, {
+
+			// When the compute is read, use that last value
+			get: function () {
+				return lastValue;
+			},
+			set: function (val) {
+				setCallbacks.forEach(function(cb){
+					cb(val);
+				});
+				return val;
+			},
+
+			on: function (updated) {
+				streamHandler = function (newVal, oldVal) {
+					lastValue = newVal;
+					updated(lastValue);
+				};
+				valueStream.onValue(streamHandler);
+			},
+
+			off: function () {
+				valueStream.offValue(streamHandler);
+			}
+		});
+	}
+};
+
+var canStreaming = canStream(canStreamInterface);
+
+
+test('Stream behavior on multiple properties with merge', 8, function() {
 
 	var expectedNewVal,
 		expectedOldVal,
@@ -20,85 +88,21 @@ test('Stream behavior on multiple properties with merge', function() {
 		bar: { type: 'string', value: 'bar' },
 		baz: {
 			type: 'string',
-			stream: function( stream ) {
-				var fooStream = this.stream('.foo');
-				var barStream = this.stream('.bar');
-
-				var c1 = this.toCompute(fooStream);
-				var c2 = this.toCompute(barStream);
+			stream: function( setStream ) {
 				var mergedCompute = compute();
-
-				var changeHandler = function(ev, val) {
+				var mergeValue = function(val) {
 					mergedCompute(val);
 				};
-				c1.on('change', changeHandler);
-				c2.on('change', changeHandler);
+				this.stream('.foo').onValue(mergeValue);
+				this.stream('.bar').onValue(mergeValue);
+				setStream.onValue(mergeValue);
 
 				return this.toStream(mergedCompute);
 			}
 		}
 	});
 
-	var canStreamInterface = {
-		toStream: function(c) {
-			return {
-				onValue: function(callback) {
-					c.on('change', function() {
-						callback.apply(null, Array.from(arguments));
-					});
-					callback(null, c());
-				}
-			};
-		},
-		toCompute: function(makeStream, context) {
-			var emitter,
-				lastValue,
-				streamHandler,
-				lastSetValue;
 
-			var setterStream = this.toStream(compute(function (e) {
-				emitter = e;
-				if(lastSetValue !== undefined) {
-					emitter.emit(lastSetValue);
-				}
-			}));
-
-			if(typeof makeStream !== 'function') {
-				var _makeStream = makeStream;
-				makeStream = function() {
-					return _makeStream;
-				};
-			}
-			var valueStream = makeStream.call(context, setterStream);
-
-			// Create a compute that will bind to the resolved stream when bound
-			return compute(undefined, {
-
-				// When the compute is read, use that last value
-				get: function () {
-					return lastValue;
-				},
-				set: function (val) {
-					lastSetValue = val;
-					return val;
-				},
-
-				on: function (updated) {
-					streamHandler = function (ev, newVal, oldVal) {
-						lastValue = newVal;
-						updated(lastValue);
-					};
-					valueStream.onValue(streamHandler);
-				},
-
-				off: function () {
-					valueStream.offValue(streamHandler);
-				}
-			});
-		}
-	};
-
-	var canStreaming = canStream(canStreamInterface);
 	defineStream(canStreaming)(MyMap);
 
 	var map = new MyMap();
@@ -138,106 +142,53 @@ test('Test if streams are memory safe', function() {
 		bar: { type: 'string', value: 'bar' },
 		baz: {
 			type: 'string',
-			stream: function( stream ) {
+			stream: function( setStream ) {
 				var fooStream = this.stream('.foo');
 				var barStream = this.stream('.bar');
 
-				var c1 = this.toCompute(fooStream);
-				var c2 = this.toCompute(barStream);
-				var mergedCompute = compute();
-
-				var changeHandler = function(ev, val) {
-					mergedCompute(val);
+				var lastValue;
+				var UPDATER;
+				var setLastValue = function(value){
+					lastValue = value;
+					UPDATER(value);
 				};
-				c1.on('change', changeHandler);
-				c2.on('change', changeHandler);
+
+				var mergedCompute = compute(undefined, {
+					on: function(updater) {
+						UPDATER = updater;
+						fooStream.onValue(setLastValue);
+						barStream.onValue(setLastValue);
+						setStream.onValue(setLastValue);
+					},
+					off: function(){
+						fooStream.offValue(setLastValue);
+						barStream.offValue(setLastValue);
+						setStream.offValue(setLastValue);
+					},
+					get: function(){
+						return lastValue;
+					}
+				});
 
 				return this.toStream(mergedCompute);
 			}
 		}
 	});
 
-	var canStreamInterface = {
-		toStream: function(c) {
-			return {
-				onValue: function(callback) {
-					c.on('change', function() {
-						callback.apply(null, Array.from(arguments));
-					});
-				},
-				offValue: function() {
-					c.off();
-				}
-			};
-		},
-		toCompute: function(makeStream, context) {
-			var emitter,
-				lastValue,
-				streamHandler,
-				lastSetValue;
-
-			var setterStream = this.toStream(compute(function (e) {
-				emitter = e;
-				if(lastSetValue !== undefined) {
-					emitter.emit(lastSetValue);
-				}
-			}));
-
-			if(typeof makeStream !== 'function') {
-				var _makeStream = makeStream;
-				makeStream = function() {
-					return _makeStream;
-				};
-			}
-			var valueStream = makeStream.call(context, setterStream);
-
-
-			// Create a compute that will bind to the resolved stream when bound
-			return compute(undefined, {
-
-				// When the compute is read, use that last value
-				get: function () {
-					return lastValue;
-				},
-				set: function (val) {
-					if(emitter) {
-						emitter.emit(val);
-					} else {
-						lastSetValue = val;
-					}
-					return val;
-				},
-
-				on: function (updated) {
-					streamHandler = function (val) {
-						lastValue = val;
-						updated();
-					};
-					valueStream.onValue(streamHandler);
-				},
-
-				off: function () {
-					valueStream.offValue();
-				}
-			});
-		}
-	};
-	var canStreaming = canStream(canStreamInterface);
 	defineStream(canStreaming)(MyMap);
 
 	var map = new MyMap();
 
 	QUnit.equal(map.__bindEvents._lifecycleBindings, undefined, 'Should have no bindings');
 
-
-	map.on("baz", function(ev, newVal, oldVal){});
+	var handler = function(ev, newVal, oldVal){};
+	map.on("baz", handler);
 
 	QUnit.equal(map.__bindEvents._lifecycleBindings, 3, 'Should have 3 bindings');
 
 
-	map.off('baz');
-
-	QUnit.equal(map.__bindEvents._lifecycleBindings, 2, 'Should reset the bindings');
+	map.off('baz', handler);
+	QUnit.equal(map.__bindEvents._lifecycleBindings, 0, 'Should reset the bindings');
 });
 
 
@@ -254,7 +205,7 @@ test('Stream on DefineList', function() {
 			return {
 				onValue: function(callback) {
 					c.on('change', function() {
-						callback.apply(null, Array.from(arguments));
+						callback.apply(null, arguments);
 					});
 				}
 			};
