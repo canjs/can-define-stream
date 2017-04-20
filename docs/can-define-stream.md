@@ -3,7 +3,7 @@
 @group can-define-stream/behaviors 0 behaviors
 @group can-define-stream/DefineMap.prototype 2 DefineMap.prototype
 @group can-define-stream/DefineList.prototype 2 DefineList.prototype
-@group can-define-stream.fns 0 Methods
+@group can-define-stream.fns 3 Methods
 @package ../package.json
 
 @description Exports a function that takes a [can-stream] can-stream interface and returns a function that takes a Type [can-define/map/map] or [can-define/list/list] and uses the supplied can-stream interface to create streamed property definitions and a .stream method
