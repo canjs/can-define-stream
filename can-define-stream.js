@@ -1,11 +1,11 @@
 var define = require('can-define');
 var assign = require("can-util/js/assign/assign");
 var each = require("can-util/js/each/each");
+var namespace = require('can-util/namespace');
 
 
 
-
-module.exports = function(canStream) {
+module.exports = namespace.canDefineStream = function(canStream) {
 	return function(DefineMapType) {
 
 
@@ -36,21 +36,6 @@ module.exports = function(canStream) {
 				define.property(DefineMapType.prototype, property, newDefinition, dataInitializers, computedInitializers);
 			}
 		});
-		/*var oldExtensions = define.extensions;
-		define.behaviors.push('stream');
-
-		define.extensions = function (objPrototype, prop, definition) {
-			if (definition.stream) {
-				return assign({
-					value: function() {
-						return this.toCompute(definition.stream, this);
-					}
-				}, define.types.compute);
-
-			} else {
-				return oldExtensions.apply(this, arguments);
-			}
-		};*/
 
 
 	};

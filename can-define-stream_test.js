@@ -104,7 +104,6 @@ test('Stream behavior on multiple properties with merge', 8, function() {
 
 
 	defineStream(canStreaming)(MyMap);
-
 	var map = new MyMap();
 
 	map.foo = 'foo-1';
