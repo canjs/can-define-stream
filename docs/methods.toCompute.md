@@ -1,13 +1,12 @@
 @function can-define-stream.tocompute toCompute
 @parent can-define-stream.fns
 
+@description Create a compute that gets updated whenever the stream value changes.
 
-@description Creates a compute that gets updated whenever the stream value changes.
+@signature `DefineMap.toCompute( stream )`
 
-@signature `canStream.toCompute( stream )`
+Creates a compute that gets updated whenever the stream value changes.
 
-Creates a compute that gets updated whenever the stream value changes.s
-
-@param {can-stream} a streams
+@param {can-stream} stream A [can-stream] stream
 
 @return {can-compute} A [can-compute] compute.

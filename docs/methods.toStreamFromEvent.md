@@ -2,12 +2,38 @@
 @parent can-define-stream.fns
 
 
-@description Creates a stream based on event
+@description Create a stream based on an event
 
-@signature `canStream.toStreamFromEvent( eventName )`
+@signature `DefineMap.toStreamFromEvent( eventName )`
 
 Creates a stream from a that gets updated whenever the event is triggered.
 
-@param {String} an event name
+```js
+var DefineList = require('can-define/list/list');
+var canStream = require("can-stream-kefir");
+var canDefineStream = require("can-define-stream");
 
-@return {Stream} A [can-stream](https://github.com/canjs/can-stream) stream.
+var PeopleList = DefineList.extend({});
+
+canDefineStream(canStream)(PeopleList);
+
+var people = new PeopleList([
+    { first: "Justin", last: "Meyer" },
+    { first: "Paula", last: "Strozak" }
+]);
+
+var stream = people.toStream('length'); // using eventName
+
+stream.onValue(function(val) {
+    val //-> 2, 3
+});
+
+people.push({
+    first: 'Obaid',
+    last: 'Ahmed'
+}); //-> stream.onValue -> 3
+```
+
+@param {String} event An event name
+
+@return {Stream} A [can-stream] stream.

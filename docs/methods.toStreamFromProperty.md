@@ -1,13 +1,38 @@
 @function can-define-stream.tostreamfromproperty toStreamFromProperty
 @parent can-define-stream.fns
 
+@description Create a stream based on a property
 
-@description Creates a stream based on property
+@signature `DefineMap.toStreamFromProperty( property )`
 
-@signature `canStream.toStreamFromProperty( property )`
+Creates a stream from a property that gets updated whenever the property value changes.
 
-Creates a stream from a that gets updated whenever the property value changes.
+```js
+var DefineMap = require('can-define/map/map');
+var canStream = require("can-stream-kefir");
+var canDefineStream = require("can-define-stream");
 
-@param {String} a property name
+var Person = DefineMap.extend({
+    name: "string",
+    lastValidName: {
+        stream: function() {
+            return this.toStream(".name").filter(function(name) { // using propName
+                return name.indexOf(" ") >= 0;
+            });
+        }
+    }
+});
 
-@return {Stream} A [can-stream](https://github.com/canjs/can-stream) stream.
+canDefineStream(canStream)(Person);
+
+var me = new Person({name: "James"});
+
+me.on("lastValidName", function(lastValid) {});
+
+me.name = "JamesAtherton"; //lastValidName -> undefined
+me.name = "James Atherton"; //lastValidName -> James Atherton
+```
+
+@param {String} property A property name
+
+@return {Stream} A [can-stream] stream.
