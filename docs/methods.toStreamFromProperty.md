@@ -16,7 +16,7 @@ var Person = DefineMap.extend({
     name: "string",
     lastValidName: {
         stream: function() {
-            return this.toStream(".name").filter(function(name) { // using propName
+            return this.toStreamFromProperty(".name").filter(function(name) { // using propName
                 return name.indexOf(" ") >= 0;
             });
         }
@@ -33,6 +33,6 @@ me.name = "JamesAtherton"; //lastValidName -> undefined
 me.name = "James Atherton"; //lastValidName -> James Atherton
 ```
 
-@param {String} property A property name
+@param {String} property A property name prepended by a dot. '.prop'
 
 @return {Stream} A [can-stream] stream.

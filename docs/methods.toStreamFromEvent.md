@@ -6,7 +6,7 @@
 
 @signature `DefineMap.toStreamFromEvent( eventName )`
 
-Creates a stream from a that gets updated whenever the event is triggered.
+Creates a stream from an event that gets updated whenever the event is triggered.
 
 ```js
 var DefineList = require('can-define/list/list');
@@ -22,7 +22,7 @@ var people = new PeopleList([
     { first: "Paula", last: "Strozak" }
 ]);
 
-var stream = people.toStream('length'); // using eventName
+var stream = people.toStreamFromEvent('length'); // using eventName
 
 stream.onValue(function(val) {
     val //-> 2, 3
