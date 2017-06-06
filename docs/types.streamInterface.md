@@ -3,7 +3,7 @@
 
 @description A [can-stream.types.streamInterface] function.
 
-@signature `streamInterface(observable, propAndOrEvent[,event])`
+@signature `streamInterface([observable], propAndOrEvent[,event])`
 
 The stream interface function returned from [can-stream] that will be used to add streamable props to a provided [can-define-stream.types.DefineMap DefineMap.prototype] or [can-define-stream.types.DefineList DefineList.prototype] and has the following property methods:
 
