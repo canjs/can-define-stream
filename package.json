@@ -36,7 +36,7 @@
     "can-define": "^1.2.0-pre.4",
     "can-observation": "^3.2.0-pre.11",
     "can-stream": "^0.3.0-pre.0",
-    "can-util": "^3.0.0",
+    "can-util": "^3.9.0-pre.4",
     "kefir": "^3.5.1"
   },
   "devDependencies": {
