@@ -55,10 +55,9 @@ me.last = "Ahmed"; //-> console.logs 2
 The [can-define-stream.toStream] method has shorthands for all of the other methods:
 
 ```js
-toStream(compute)                    //-> stream
-toStream(map, "eventName")           //-> stream
-toStream(map, ".propName")           //-> stream
-toStream(map, ".propName eventName") //-> stream
+toStream("eventName")           //-> stream
+toStream(".propName")           //-> stream
+toStream(".propName eventName") //-> stream
 ```
 
 For example:
@@ -66,6 +65,7 @@ For example:
 __Update map property based on stream value__
 
 ```js
+var DefineMap = require('can-define/map/map');
 var canStream = require("can-stream-kefir");
 var canDefineStream = require("can-define-stream");
 
@@ -93,6 +93,7 @@ me.name = "James Atherton"; //lastValidName -> James Atherton
 __Stream on DefineList__
 
 ```js
+var DefineList = require('can-define/list/list');
 var canStream = require("can-stream-kefir");
 var canDefineStream = require("can-define-stream");
 
