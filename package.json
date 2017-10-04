@@ -12,13 +12,14 @@
     "preversion": "npm test",
     "postversion": "git push --tags && git push",
     "testee": "testee test.html --browsers firefox",
-    "test": "npm run jshint && npm run testee",
+    "test": "npm run detect-cycle && npm run jshint && npm run testee",
     "jshint": "jshint *.js --config",
     "release:pre": "npm version prerelease && npm publish --tag pre",
     "release:patch": "npm version patch && npm publish",
     "release:minor": "npm version minor && npm publish",
     "release:major": "npm version major && npm publish",
-    "develop": "done-serve --static --develop --port 8080"
+    "develop": "done-serve --static --develop --port 8080",
+    "detect-cycle": "detect-cyclic-packages --ignore done-serve"
   },
   "main": "can-define-stream",
   "keywords": [
@@ -40,6 +41,7 @@
     "kefir": "^3.5.1"
   },
   "devDependencies": {
+    "detect-cyclic-packages": "^1.1.0",
     "done-serve": "^1.2.0",
     "donejs-cli": "^1.0.1",
     "generator-donejs": "^1.0.5",
