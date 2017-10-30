@@ -1,5 +1,6 @@
 @module {function} can-define-stream can-define-stream
-@parent can-ecosystem
+@parent can-observables
+@collection can-ecosystem
 @group can-define-stream.types 3 types
 @group can-define-stream.fns 4 DefineMap methods
 @package ../package.json
