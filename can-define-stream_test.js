@@ -5,8 +5,10 @@ var defineStream = require('can-define-stream');
 var compute = require('can-compute');
 var canStream = require('can-stream');
 
-QUnit.module('can-define-stream');
+var canSymbol = require('can-symbol');
+var metaSymbol = canSymbol.for('can.meta');
 
+QUnit.module('can-define-stream');
 
 // Create a placeholder streaming interface:
 var id = 0;
@@ -75,6 +77,20 @@ var canStreamInterface = {
 
 var canStreaming = canStream(canStreamInterface);
 
+var poll = function poll(fn, callback, timeout, interval) {
+	var endTime = Number(new Date()) + (timeout || 2000);
+	interval = interval || 100;
+
+	(function p() {
+		if (fn()) {
+			callback();
+		} else if (Number(new Date()) < endTime) {
+			setTimeout(p, interval);
+		} else {
+			callback();
+		}
+	})();
+};
 
 test('Stream behavior on multiple properties with merge', 8, function() {
 
@@ -135,7 +151,8 @@ test('Stream behavior on multiple properties with merge', 8, function() {
 	map.baz = 'new baz';
 });
 
-test('Test if streams are memory safe', function() {
+QUnit.test('Test if streams are memory safe', function(assert) {
+	var done = assert.async();
 
 	var MyMap = DefineMap.extend({
 		foo: 'string',
@@ -177,23 +194,29 @@ test('Test if streams are memory safe', function() {
 
 	defineStream(canStreaming)(MyMap);
 
-	var map = new MyMap();
+	var getNumberOfBindings = function(map) {
+		var meta = map[metaSymbol];
+		return meta && meta.handlers && meta.handlers.get([]).length;
+	};
 
-	QUnit.equal(map.__bindEvents._lifecycleBindings, undefined, 'Should have no bindings');
+	var map = new MyMap();
+	assert.equal(getNumberOfBindings(map), undefined, 'Should have no bindings');
 
 	var handler = function(ev, newVal, oldVal){};
-	map.on("baz", handler);
-
-	QUnit.equal(map.__bindEvents._lifecycleBindings, 3, 'Should have 3 bindings');
-
+	map.on('baz', handler);
+	assert.equal(getNumberOfBindings(map), 3, 'Should have 3 bindings');
 
 	map.off('baz', handler);
-	QUnit.equal(map.__bindEvents._lifecycleBindings, 0, 'Should reset the bindings');
+	poll(
+		function() {
+			return getNumberOfBindings(map) === 0;
+		},
+		function() {
+			assert.equal(getNumberOfBindings(map), 0, 'Should reset the bindings');
+			done();
+		}
+	);
 });
-
-
-
-
 
 test('Stream on DefineList', function() {
 	var expectedLength;
