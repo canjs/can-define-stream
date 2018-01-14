@@ -21,7 +21,7 @@ module.exports = function(canStream) {
 			var streamDefinition = definition.stream;
 			if(streamDefinition) {
 				var newDefinition = assign({
-					value: function() {
+					default: function() {
 						return canStream.toCompute(streamDefinition, this);
 					}
 				}, define.types.compute);
