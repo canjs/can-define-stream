@@ -11,12 +11,12 @@
 
 The `can-define-stream` module exports a function that takes a [can-define-stream.types.streamInterface] and returns a function that takes a [can-define-stream.types.DefineMap DefineMap.prototype] or [can-define-stream.types.DefineList DefineList.prototype] and uses the supplied stream interface to create streamed property definitions.
 
-```js
-var canStream = require("can-stream-kefir");
-var canDefineStream = require("can-define-stream");
-var DefineMap = require("can-define/map/map");
+```javascript
+import canStream from "can-stream-kefir";
+import canDefineStream from "can-define-stream";
+import DefineMap from "can-define/map/map";
 
-var Person = DefineMap.extend({
+const Person = DefineMap.extend({
     first: "string",
     last: "string",
     fullName: {
@@ -35,7 +35,7 @@ var Person = DefineMap.extend({
 
 canDefineStream(canStream)(Person);
 
-var me = new Person({name: "Justin", last: "Meyer"});
+const me = new Person({name: "Justin", last: "Meyer"});
 
 me.on("fullNameChangeCount", function(ev, newVal) {
     console.log(newVal);
@@ -55,7 +55,7 @@ me.last = "Ahmed"; //-> console.logs 2
 
 The [can-define-stream.toStream] method has shorthands for all of the other methods:
 
-```js
+```javascript
 toStream("eventName")           //-> stream
 toStream(".propName")           //-> stream
 toStream(".propName eventName") //-> stream
@@ -65,12 +65,12 @@ For example:
 
 __Update map property based on stream value__
 
-```js
-var DefineMap = require('can-define/map/map');
-var canStream = require("can-stream-kefir");
-var canDefineStream = require("can-define-stream");
+```javascript
+import DefineMap from 'can-define/map/map';
+import canStream from "can-stream-kefir";
+import canDefineStream from "can-define-stream";
 
-var Person = DefineMap.extend({
+const Person = DefineMap.extend({
     name: "string",
     lastValidName: {
         stream: function() {
@@ -83,7 +83,7 @@ var Person = DefineMap.extend({
 
 canDefineStream(canStream)(Person);
 
-var me = new Person({name: "James"});
+const me = new Person({name: "James"});
 
 me.on("lastValidName", function(lastValid) {});
 
@@ -93,21 +93,21 @@ me.name = "James Atherton"; //lastValidName -> James Atherton
 
 __Stream on DefineList__
 
-```js
-var DefineList = require('can-define/list/list');
-var canStream = require("can-stream-kefir");
-var canDefineStream = require("can-define-stream");
+```javascript
+import DefineList from 'can-define/list/list';
+import canStream from "can-stream-kefir";
+import canDefineStream from "can-define-stream";
 
-var PeopleList = DefineList.extend({});
+const PeopleList = DefineList.extend({});
 
 canDefineStream(canStream)(PeopleList);
 
-var people = new PeopleList([
+const people = new PeopleList([
     { first: "Justin", last: "Meyer" },
     { first: "Paula", last: "Strozak" }
 ]);
 
-var stream = people.toStream('length'); // using eventName
+const stream = people.toStream('length'); // using eventName
 
 stream.onValue(function(val) {
     val //-> 2, 3

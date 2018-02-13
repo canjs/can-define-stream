@@ -12,28 +12,28 @@ The stream interface function returned from [can-stream] that will be used to ad
 - .toStreamFromEvent(property)
 - .toCompute([can-stream.types.makeStream makeStream(setStream)], context):compute
 
-```js
+```javascript
 import DefineMap from 'can-define/map/map';
 import canDefineStream from 'can-define-stream';
 import streamInterface from 'can-stream-kefir';
 
-var Person = DefineMap.extend({
-	first: "string",
-	last: "string",
-	fullName: {
-			get: function() {
-					return this.first + " " + this.last;
-			}
-	}
+const Person = DefineMap.extend({
+  first: "string",
+  last: "string",
+  fullName: {
+      get: function() {
+          return this.first + " " + this.last;
+      }
+  }
 });
 
-var john = new Person({ first: 'John' });
+const john = new Person({ first: 'John' });
 john.toStream('.first'); //-> Error (toStream doesn't exist)
 
-var defineStreamAdder = canDefineStream(streamInterface);
+const defineStreamAdder = canDefineStream(streamInterface);
 defineStreamAdder(Person);
 
-var justin = new Person({ first: 'Justin' });
+const justin = new Person({ first: 'Justin' });
 justin.toStream('.first'); //-> Stream
 ```
 
