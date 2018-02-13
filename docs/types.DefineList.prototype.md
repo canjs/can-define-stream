@@ -11,14 +11,14 @@ Creates a DefineList type instance
 import DefineMap from 'can-define/map/map';
 import DefineList from 'can-define/list/list';
 
-var People = DefineList.extend([
+var People = DefineList.extend({
 	'#': {
 		type: {
 			first: 'string',
 			last: 'string'
 		}
 	}
-]);
+});
 
 var people = new People([
 	{ first: 'John', last: 'Gardner' },
