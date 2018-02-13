@@ -12,19 +12,19 @@ The stream interface function returned from [can-stream] that will be used to ad
 - .toStreamFromEvent(property)
 - .toCompute([can-stream.types.makeStream makeStream(setStream)], context):compute
 
-```javascript
+```js
 import DefineMap from 'can-define/map/map';
 import canDefineStream from 'can-define-stream';
 import streamInterface from 'can-stream-kefir';
 
 const Person = DefineMap.extend({
-  first: "string",
-  last: "string",
-  fullName: {
-      get: function() {
-          return this.first + " " + this.last;
-      }
-  }
+	first: "string",
+	last: "string",
+	fullName: {
+		get: function() {
+			return this.first + " " + this.last;
+		}
+	}
 });
 
 const john = new Person({ first: 'John' });

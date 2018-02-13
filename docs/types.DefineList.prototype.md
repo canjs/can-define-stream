@@ -7,22 +7,22 @@
 
 Creates a DefineList type instance
 
-```javascript
+```js
 import DefineMap from 'can-define/map/map';
 import DefineList from 'can-define/list/list';
 
 const People = DefineList.extend({
-  '#': {
-    type: {
-      first: 'string',
-      last: 'string'
-    }
-  }
+	'#': {
+		type: {
+			first: 'string',
+			last: 'string'
+		}
+	}
 });
 
 const people = new People([
-  { first: 'John', last: 'Gardner' },
-  { first: 'Justin', last: 'Meyer' }
+	{ first: 'John', last: 'Gardner' },
+	{ first: 'Justin', last: 'Meyer' }
 ]);
 ```
 

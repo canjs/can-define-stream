@@ -7,22 +7,22 @@
 
 Creates a DefineMap type instance
 
-```javascript
+```js
 import DefineMap from 'can-define/map/map';
 
 const Person = DefineMap.extend({
-  first: 'string',
-  last: 'string',
-  fullName: {
-    get() {
-      return this.first + " " + this.last;
-    }
-  }
+	first: 'string',
+	last: 'string',
+	fullName: {
+		get() {
+			return this.first + " " + this.last;
+		}
+	}
 });
 
 const john = new Person({
-  first: 'John',
-  last: 'Gardner'
+	first: 'John',
+	last: 'Gardner'
 });
 ```
 
