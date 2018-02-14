@@ -8,22 +8,22 @@
 Creates a DefineList type instance
 
 ```js
-import DefineMap from 'can-define/map/map';
-import DefineList from 'can-define/list/list';
+import DefineMap from "can-define/map/map";
+import DefineList from "can-define/list/list";
 
-const People = DefineList.extend({
-	'#': {
+const People = DefineList.extend( {
+	"#": {
 		type: {
-			first: 'string',
-			last: 'string'
+			first: "string",
+			last: "string"
 		}
 	}
-});
+} );
 
-const people = new People([
-	{ first: 'John', last: 'Gardner' },
-	{ first: 'Justin', last: 'Meyer' }
-]);
+const people = new People( [
+	{ first: "John", last: "Gardner" },
+	{ first: "Justin", last: "Meyer" }
+] );
 ```
 
 @body

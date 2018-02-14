@@ -16,7 +16,7 @@ import canStream from "can-stream-kefir";
 import canDefineStream from "can-define-stream";
 import DefineMap from "can-define/map/map";
 
-const Person = DefineMap.extend({
+const Person = DefineMap.extend( {
 	first: "string",
 	last: "string",
 	fullName: {
@@ -26,21 +26,21 @@ const Person = DefineMap.extend({
 	},
 	fullNameChangeCount: {
 		stream: function() {
-			return this.toStream(".fullName").scan(function(last) {
+			return this.toStream( ".fullName" ).scan( function( last ) {
 				return last + 1;
-			}, 0);
+			}, 0 );
 		}
 	}
-});
+} );
 
-canDefineStream(canStream)(Person);
+canDefineStream( canStream )( Person );
 
-const me = new Person({name: "Justin", last: "Meyer"});
+const me = new Person( { name: "Justin", last: "Meyer" } );
 
-me.on("fullNameChangeCount", function(ev, newVal) {
-	console.log(newVal);
-});
-me.fullNameChangeCount //-> 0
+me.on( "fullNameChangeCount", function( ev, newVal ) {
+	console.log( newVal );
+} );
+me.fullNameChangeCount; //-> 0
 me.first = "Obaid"; //-> console.logs 1
 me.last = "Ahmed"; //-> console.logs 2
 ```
@@ -56,9 +56,9 @@ me.last = "Ahmed"; //-> console.logs 2
 The [can-define-stream.toStream] method has shorthands for all of the other methods:
 
 ```js
-toStream("eventName")           //-> stream
-toStream(".propName")           //-> stream
-toStream(".propName eventName") //-> stream
+toStream( "eventName" );           //-> stream
+toStream( ".propName" );           //-> stream
+toStream( ".propName eventName" ); //-> stream
 ```
 
 For example:
@@ -66,26 +66,26 @@ For example:
 __Update map property based on stream value__
 
 ```js
-import DefineMap from 'can-define/map/map';
+import DefineMap from "can-define/map/map";
 import canStream from "can-stream-kefir";
 import canDefineStream from "can-define-stream";
 
-const Person = DefineMap.extend({
+const Person = DefineMap.extend( {
 	name: "string",
 	lastValidName: {
 		stream: function() {
-			return this.toStream(".name").filter(function(name) { // using propName
-				return name.indexOf(" ") >= 0;
-			});
+			return this.toStream( ".name" ).filter( function( name ) { // using propName
+				return name.indexOf( " " ) >= 0;
+			} );
 		}
 	}
-});
+} );
 
-canDefineStream(canStream)(Person);
+canDefineStream( canStream )( Person );
 
-const me = new Person({name: "James"});
+const me = new Person( { name: "James" } );
 
-me.on("lastValidName", function(lastValid) {});
+me.on( "lastValidName", function( lastValid ) {} );
 
 me.name = "JamesAtherton"; //lastValidName -> undefined
 me.name = "James Atherton"; //lastValidName -> James Atherton
@@ -94,27 +94,27 @@ me.name = "James Atherton"; //lastValidName -> James Atherton
 __Stream on DefineList__
 
 ```js
-import DefineList from 'can-define/list/list';
+import DefineList from "can-define/list/list";
 import canStream from "can-stream-kefir";
 import canDefineStream from "can-define-stream";
 
-const PeopleList = DefineList.extend({});
+const PeopleList = DefineList.extend( {} );
 
-canDefineStream(canStream)(PeopleList);
+canDefineStream( canStream )( PeopleList );
 
-const people = new PeopleList([
+const people = new PeopleList( [
 	{ first: "Justin", last: "Meyer" },
 	{ first: "Paula", last: "Strozak" }
-]);
+] );
 
-const stream = people.toStream('length'); // using eventName
+const stream = people.toStream( "length" ); // using eventName
 
-stream.onValue(function(val) {
-	val //-> 2, 3
-});
+stream.onValue( function( val ) {
+	val; //-> 2, 3
+} );
 
-people.push({
-	first: 'Obaid',
-	last: 'Ahmed'
-}); //-> stream.onValue -> 3
+people.push( {
+	first: "Obaid",
+	last: "Ahmed"
+} ); //-> stream.onValue -> 3
 ```

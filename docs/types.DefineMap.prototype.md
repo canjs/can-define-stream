@@ -8,22 +8,22 @@
 Creates a DefineMap type instance
 
 ```js
-import DefineMap from 'can-define/map/map';
+import DefineMap from "can-define/map/map";
 
-const Person = DefineMap.extend({
-	first: 'string',
-	last: 'string',
+const Person = DefineMap.extend( {
+	first: "string",
+	last: "string",
 	fullName: {
 		get() {
 			return this.first + " " + this.last;
 		}
 	}
-});
+} );
 
-const john = new Person({
-	first: 'John',
-	last: 'Gardner'
-});
+const john = new Person( {
+	first: "John",
+	last: "Gardner"
+} );
 ```
 
 @body
