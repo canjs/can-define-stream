@@ -8,26 +8,26 @@
 Creates a stream that gets updated whenever the property value changes or event is triggered.
 
 ```js
-var DefineMap = require('can-define/map/map');
-var canStream = require("can-stream-kefir");
-var canDefineStream = require("can-define-stream");
+import DefineMap from "can-define/map/map";
+import canStream from "can-stream-kefir";
+import canDefineStream from "can-define-stream";
 
-var Person = DefineMap.extend({
-    name: "string",
-    lastValidName: {
-        stream: function() {
-            return this.toStream(".name").filter(function(name) { // using propName
-                return name.indexOf(" ") >= 0;
-            });
-        }
-    }
-});
+const Person = DefineMap.extend( {
+	name: "string",
+	lastValidName: {
+		stream: function() {
+			return this.toStream( ".name" ).filter( function( name ) { // using propName
+				return name.indexOf( " " ) >= 0;
+			} );
+		}
+	}
+} );
 
-canDefineStream(canStream)(Person);
+canDefineStream( canStream )( Person );
 
-var me = new Person({name: "James"});
+const me = new Person( { name: "James" } );
 
-me.on("lastValidName", function(lastValid) {});
+me.on( "lastValidName", function( lastValid ) {} );
 
 me.name = "JamesAtherton"; //lastValidName -> undefined
 me.name = "James Atherton"; //lastValidName -> James Atherton
