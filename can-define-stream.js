@@ -1,3 +1,4 @@
+"use strict";
 var define = require("can-define");
 var assign = require("can-assign");
 var canReflect = require("can-reflect");
