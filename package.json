@@ -35,7 +35,7 @@
   "dependencies": {
     "can-assign": "^1.1.1",
     "can-compute": "^4.0.0",
-    "can-define": "^2.0.0",
+    "can-define": "^2.7.8",
     "can-observation": "^4.0.0",
     "can-reflect": "^1.11.0",
     "can-stream": "^1.0.0",
