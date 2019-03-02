@@ -5,8 +5,6 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/canjs/can-define-stream/blob/master/LICENSE)
 [![npm version](https://badge.fury.io/js/can-define-stream.svg)](https://www.npmjs.com/package/can-define-stream)
 [![Travis build status](https://travis-ci.org/canjs/can-define-stream.svg?branch=master)](https://travis-ci.org/canjs/can-define-stream)
-[![AppVeyor build status](https://ci.appveyor.com/api/projects/status/github/canjs/can-define-stream?branch=master&svg=true)](https://ci.appveyor.com/project/matthewp/can-define-stream)
-[![Coverage status](https://coveralls.io/repos/github/canjs/can-define-stream/badge.svg?branch=master)](https://coveralls.io/github/canjs/can-define-stream?branch=master)
 [![Greenkeeper badge](https://badges.greenkeeper.io/canjs/can-define-stream.svg)](https://greenkeeper.io/)
 
 Add useful stream conversion methods to a supplied [can-define/map/map] or [can-define/list/list] constructor using a [can-define-stream.types.streamInterface stream interface] such as [can-stream-kefir].
