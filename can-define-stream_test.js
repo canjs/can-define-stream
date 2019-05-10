@@ -92,7 +92,7 @@ var poll = function poll(fn, callback, timeout, interval) {
 	})();
 };
 
-test('Stream behavior on multiple properties with merge', 8, function() {
+QUnit.test('Stream behavior on multiple properties with merge', 8, function(assert) {
 
 	var expectedNewVal,
 		expectedOldVal,
@@ -125,15 +125,15 @@ test('Stream behavior on multiple properties with merge', 8, function() {
 
 	map.foo = 'foo-1';
 
-	QUnit.equal( map.baz, undefined, "read value before binding");
+	assert.equal( map.baz, undefined, "read value before binding");
 
 	map.on("baz", function(ev, newVal, oldVal){
-		QUnit.equal(newVal, expectedNewVal, caseName+ " newVal");
-		QUnit.equal(oldVal, expectedOldVal, caseName+ " oldVal");
+		assert.equal(newVal, expectedNewVal, caseName+ " newVal");
+		assert.equal(oldVal, expectedOldVal, caseName+ " oldVal");
 	});
 
 
-	QUnit.equal( map.baz, 'bar', "read value immediately after binding");
+	assert.equal( map.baz, 'bar', "read value immediately after binding");
 
 	caseName = "setting foo";
 	expectedOldVal = 'bar';
@@ -218,7 +218,7 @@ QUnit.test('Test if streams are memory safe', function(assert) {
 	);
 });
 
-test('Stream on DefineList', function() {
+QUnit.test('Stream on DefineList', function(assert) {
 	var expectedLength;
 
 	var PeopleList = DefineList.extend({});
@@ -247,7 +247,7 @@ test('Stream on DefineList', function() {
 
 	expectedLength = 2;
 	stream.onValue(function(ev, val) {
-		QUnit.equal(val, expectedLength, 'List size changed');
+		assert.equal(val, expectedLength, 'List size changed');
 	});
 
 	expectedLength = 3;
