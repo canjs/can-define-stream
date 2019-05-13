@@ -92,7 +92,8 @@ var poll = function poll(fn, callback, timeout, interval) {
 	})();
 };
 
-QUnit.test('Stream behavior on multiple properties with merge', 8, function(assert) {
+QUnit.test('Stream behavior on multiple properties with merge', function(assert) {
+	assert.expect(8);
 
 	var expectedNewVal,
 		expectedOldVal,
