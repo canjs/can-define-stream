@@ -37,7 +37,7 @@
     "can-compute": "^4.0.0",
     "can-define": "^2.0.0",
     "can-observation": "^4.0.0",
-    "can-reflect": "^1.11.0",
+    "can-reflect": "^1.17.10",
     "can-stream": "^1.0.0",
     "kefir": "^3.8.0"
   },
