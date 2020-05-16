@@ -39,7 +39,7 @@
     "can-observation": "^4.0.0",
     "can-reflect": "^1.11.0",
     "can-stream": "^1.0.0",
-    "kefir": "^3.8.0"
+    "kefir": "^3.8.7"
   },
   "devDependencies": {
     "can-symbol": "^1.5.0",
